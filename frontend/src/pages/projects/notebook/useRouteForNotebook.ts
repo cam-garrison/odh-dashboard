@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { getServiceMeshGwHost, getRoute } from '~/api';
+import { getServiceMeshGwHost, getRoute, getNotebook } from '~/api';
 import { FAST_POLL_INTERVAL } from '~/utilities/const';
 import { useAppContext } from '~/app/AppContext';
+import { hasServiceMeshAnnotation } from './utils';
 
 const useRouteForNotebook = (
   notebookName?: string,
@@ -16,13 +17,16 @@ const useRouteForNotebook = (
   React.useEffect(() => {
     let watchHandle;
     let cancelled = false;
-    const watchRoute = () => {
+    const watchRoute = async () => {
       if (cancelled) {
         return;
       }
       if (notebookName && projectName) {
+        // fetch notebook to check if it was created with or without service mesh enabled.
+        const notebookServiceMeshFlag = await hasServiceMeshAnnotation(notebookName, projectName);
+
         // if not using service mesh fetch openshift route, otherwise get Istio Ingress Gateway route
-        const getRoutePromise = dashboardConfig.spec.dashboardConfig.disableServiceMesh
+        const getRoutePromise = notebookServiceMeshFlag
           ? getRoute(notebookName, projectName).then((route) => route?.spec.host)
           : getServiceMeshGwHost(projectName);
 
