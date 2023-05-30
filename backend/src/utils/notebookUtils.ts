@@ -311,6 +311,7 @@ export const assembleNotebook = async (
         'opendatahub.io/odh-managed': 'true',
         'opendatahub.io/user': translatedUsername,
         'opendatahub.io/dashboard': 'true',
+        'sidecar.istio.io/inject': serviceMeshEnabled,
       },
       annotations: {
         'notebooks.opendatahub.io/oauth-logout-url': `${url}/notebookController/${translatedUsername}/home`,
