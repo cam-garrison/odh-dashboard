@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getServiceMeshGwHost, getRoute, getNotebook } from '~/api';
+import { getServiceMeshGwHost, getRoute } from '~/api';
 import { FAST_POLL_INTERVAL } from '~/utilities/const';
 import { useAppContext } from '~/app/AppContext';
 import { hasServiceMeshAnnotation } from './utils';

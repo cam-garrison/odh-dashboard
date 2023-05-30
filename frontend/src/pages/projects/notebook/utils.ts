@@ -1,9 +1,8 @@
 import { EventKind, NotebookKind } from '~/k8sTypes';
 import { EventStatus, NotebookStatus } from '~/types';
 import { ROOT_MOUNT_PATH } from '~/pages/projects/pvc/const';
-import { useWatchNotebookEvents } from './useWatchNotebookEvents';
 import { getNotebook } from '~/api';
-
+import { useWatchNotebookEvents } from './useWatchNotebookEvents';
 
 export const hasStopAnnotation = (notebook: NotebookKind): boolean =>
   !!(
@@ -11,15 +10,17 @@ export const hasStopAnnotation = (notebook: NotebookKind): boolean =>
     notebook.metadata.annotations['kubeflow-resource-stopped'] !== 'odh-notebook-controller-lock'
   );
 
-export const hasServiceMeshAnnotation = async (notebookName: string, namespaceName: string): Promise<boolean> => {
+export const hasServiceMeshAnnotation = async (
+  notebookName: string,
+  namespaceName: string,
+): Promise<boolean> => {
   try {
     const notebook: NotebookKind = await getNotebook(notebookName, namespaceName);
     return Boolean(notebook.metadata.annotations?.['opendatahub.io/service-mesh']) || false;
   } catch (error) {
-    console.error('Error getting notebook', error)
-    return false; 
+    return false;
   }
-}
+};
 
 export const getNotebookPVCVolumeNames = (notebook: NotebookKind): { [name: string]: string } =>
   (notebook.spec.template.spec.volumes || []).reduce((acc, volume) => {

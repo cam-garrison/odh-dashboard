@@ -29,9 +29,9 @@ export const getNotebookStatus = async (
   const notebookName = notebook?.metadata.name;
   let newNotebook: Notebook;
   if (isRunning && !notebook?.metadata.annotations?.['opendatahub.io/link']) {
-    const notebookServiceMeshFlag = notebook?.metadata.annotations?.['opendatahub.io/service-mesh']
+    const notebookServiceMeshFlag = notebook?.metadata.annotations?.['opendatahub.io/service-mesh'];
     let route: Route;
-    if (!notebookServiceMeshFlag) {
+    if (notebookServiceMeshFlag) {
       route = await getGatewayRoute(fastify, 'istio-system', 'odh-gateway').catch((e) => {
         fastify.log.warn(`Failed getting route ${notebookName}: ${e.message}`);
         return undefined;
